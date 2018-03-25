@@ -7,13 +7,13 @@ import "./safemath.sol";
  * @title BlockchainArbitration
  * @dev The BlockchainArbitration contract contains the arguments and arbitration fee for arbitration.
  * The contract presents the highest voted solution as the final arbitration solution. There is a time
- * restriction to a week total for the contract. 2 days maximum for solutions and 5 days maximum for voting.
+ * restriction to a week total for the contract. 2 days maximum for solutions and 3 days maximum for voting.
  * Solution providers and voters are arbitrarily chosen from a pool of addresses who holds our ARB token by
  * means of Proof of Stake.
  */
 contract BlockchainArbitration is Ownable {
 
-  using SafeMath for uint8;
+  using SafeMath for uint256;
 
   /**
   * @dev String A represents the viewpoint and argument of side A;
@@ -25,22 +25,24 @@ contract BlockchainArbitration is Ownable {
   /**
   * @dev Arbitration Fee as a percentage of the total balance of the contract. Base fee is 5%.
   */
-  uint8 feePercentage = 5;
+  uint256 feePercentage = 5;
 
   /**
   * @dev Stores solutions and addresses of solutions providers.
+  *      Stores a dynamic array of voter addresses.
   */
   mapping (string => address) private solutionToSender;
+  mapping (uint8 => address[]) private indexToVoters;
 
   /*
   * @dev Caps the total number of solutions to 10 solutions or 2 days after the creation of the contract.
   */
-  address[] private solutions;
+  address[10] private solutions;
 
   /*
   * @dev Votes for solutions of the same index
   */
-  address[] private votes;
+  address[10] private votes;
 
   /**
   * @dev Constructor initiates String A and String B with the parameters.
@@ -67,7 +69,7 @@ contract BlockchainArbitration is Ownable {
   /**
   * @dev Increase Fees by numbers of percentage points.
   */
-  function increaseFees(uint8 percent) public onlyOwner {
+  function increaseFees(uint256 percent) public onlyOwner {
     require(feePercentage.add(percent) <= 100);
     feePercentage = feePercentage.add(percent);
   }
@@ -75,8 +77,8 @@ contract BlockchainArbitration is Ownable {
   /**
   * @dev Adds a solution to the dispute.
   */
-  function sendSolution() public approveSolutionsSenders() {
-
+  function sendSolution(string _solution) public approveSolutionsSenders() {
+    require(solutions[9] = )
   }
 
   /**
@@ -101,7 +103,7 @@ contract BlockchainArbitration is Ownable {
   }
 
   /**
-  * @dev Restricts voting time to 5 days.
+  * @dev Restricts voting time to 3 days.
   */
   function voteTime() private view {
 
